@@ -135,10 +135,10 @@ Still considering:
 
 
 ## Program Structure
-Please refer to the (COMP170_FinalProject.java)[] file
+Please refer to the (COMP170_FinalProject.java)[https://github.com/charlotteprevost/COMP170_FinalProject/blob/main/COMP170_FinalProject.java] file
 
 ## Key Data
-Please refer to the (COMP170_FinalProject.java)[] file
+Please refer to the (COMP170_FinalProject.java)[https://github.com/charlotteprevost/COMP170_FinalProject/blob/main/COMP170_FinalProject.java] file
 
 ## Issues / Successes
 Question or problems you are facing right?
