@@ -117,10 +117,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class COMP170_FinalProject {
 
@@ -128,8 +125,7 @@ public class COMP170_FinalProject {
     private static int guessesLeft = 6;
     private static int lettersLeftToGuess;
     private static String wordToGuess;
-    private static char[] letterGuesses = new char[6];
-//    private static StringBuilder userGuess;
+    private static char[] letterGuesses;
     private static String userGuess;
 
 
@@ -192,8 +188,19 @@ public class COMP170_FinalProject {
         }
     }
 
+    // Count the number of unique characters in the String word
+    public static int cntDistinct(String str) {
+        // Set to store unique characters in the String
+        HashSet<Character> s = new HashSet<Character>();
+        for(int i = 0; i < str.length(); i++) {
+            s.add(str.charAt(i));
+        }
+        return s.size();
+    }
+
     // Fetch a random word from a set difficulty level.
     // Store the word and show the user how many letter places they must guess
+    // Instantiate Character array of previously
     public static void setWord()
             throws FileNotFoundException {
         int difficulty = setDifficulty();
@@ -207,8 +214,9 @@ public class COMP170_FinalProject {
         // Assign initial placeholder characters to user's wordGuess
         userGuess = "_".repeat(wordToGuess.length());
         System.out.println("Debug_Word to guess: "+ wordToGuess);
+        // Instantiate char array that will hold previous letter guesses
+        letterGuesses = "_".repeat(cntDistinct(wordToGuess)+guessesLeft).toCharArray();
         printLeftToGuess();
-        System.out.println("The word contains "+wordToGuess.length()+" letters: "+userGuess);
     }
 
     // Print letters left to guess
@@ -231,12 +239,29 @@ public class COMP170_FinalProject {
         System.out.println("Word to guess: \t"+String.join(" ", leftToGuess));
     }
 
+    // Add letter guess to letterGuesses
+    public static void updateLetterGuesses(char guess) {
+        for (int i = 0; i < letterGuesses.length; i++) {
+            if (letterGuesses[i] == '_'){
+                letterGuesses[i] = guess;
+                break;
+            }
+        }
+    }
+
     // Print letters already guessed
     // Optional: Add color to output (good guess green, bad guess red)
     public static void printLetterGuesses() {
-        System.out.print(letterGuesses[0]);
-        for (char c : letterGuesses){
-            System.out.print(", "+ c);
+        System.out.print("Previous guesses:\t");
+        if (letterGuesses[0] != '_'){
+            System.out.print(letterGuesses[0]);
+        }
+        for (int i = 1; i < letterGuesses.length; i++) {
+            if (letterGuesses[i] != '_'){
+                System.out.print(", "+letterGuesses[i]);
+            } else {
+                break;
+            }
         }
     }
 
@@ -266,7 +291,7 @@ public class COMP170_FinalProject {
     // Prompt user for letter guess
     public static void guessWord() {
         Scanner console = new Scanner(System.in);
-        System.out.print("Your letter guess: ");
+        System.out.print("\nYour letter guess: ");
         // Use RegEx matching to ensure we're getting a letter from the user
         while(!console.hasNext("[A-Za-z]")){
             System.out.println("Invalid input, please enter a single letter: ");
@@ -274,15 +299,15 @@ public class COMP170_FinalProject {
         }
         char letterGuess = console.next().toUpperCase().charAt(0);
 
+        updateLetterGuesses(letterGuess);
         checkGuess(letterGuess);
         printDrawing();
-        printLetterGuesses();
         printLeftToGuess();
+        printLetterGuesses();
     }
 
     public static void main(String[] args)
             throws FileNotFoundException {
-        System.out.println(letterGuesses);
         welcomeUser();
         setWord();
         // While the user's guess so far is not equal to the word to
