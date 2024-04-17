@@ -1,19 +1,19 @@
 COMP 170-005 – Spring 2024 – Final Project
 
-<p align="center">
+<div align="center">
 
-# **The Training Gibbet**
-_Alena Eshaya_ & _Charlotte Prevost_
+# $${\color{darkred}The\ Training\ Gibbet}$$
 
-</p>
+$${\color{grey}Alena\ Eshaya\ and\ Charlotte\ Prevost}$$	
+
+</div>
 
 ---
+<div align="center">
+	
+# $${\color{teal}I.\ Project\ Proposal}$$
 
-<p align="center">
-
-# I. Project Proposal
-
-</p>
+</div>
 
 ## Definition
 Our Training Gibbet is designed to hone a user’s Hangman word guessing skills. The user starts by selecting their difficulty (easy, medium, hard), then a word is randomly chosen by our code. One letter at a time, the user enters their guess.
@@ -133,7 +133,12 @@ Ultimately, handling the Scanner will be paramount. For edge cases that we have 
 | Week 15 | Presentation. |
 
 ---
-# II. Midpoint Deliverables
+
+<div align="center">
+
+# $${\color{teal}II.\ Midpoint\ Deliverables}$$
+
+</div>
 
 ## Requirement Updates
 Still considering:
@@ -142,18 +147,23 @@ Still considering:
 
 
 ## Program Structure
-Please refer to the (COMP170_FinalProject.java)[https://github.com/charlotteprevost/COMP170_FinalProject/blob/main/COMP170_FinalProject.java] file
+Please refer to the [COMP170_FinalProject.java](https://github.com/charlotteprevost/COMP170_FinalProject/blob/main/COMP170_FinalProject.java) file
 
 ## Key Data
-Please refer to the (COMP170_FinalProject.java)[https://github.com/charlotteprevost/COMP170_FinalProject/blob/main/COMP170_FinalProject.java] file
+Please refer to the [COMP170_FinalProject.java](https://github.com/charlotteprevost/COMP170_FinalProject/blob/main/COMP170_FinalProject.java) file
 
 ## Issues / Successes
-Question or problems you are facing right?
+_"Question or problems you are facing right?"_
  
 ---
 ---
-# Debugging Log
+<div align="center">
+	
+# $${\color{teal}Debugging\ Log}$$
+
 _Keep track of feedback and bugs reported by test-users here._
+
+</div>
 
 
 | Date (YYYY-MM-DD) | Report (Who and What) | Notes/Solutions (Problem Solving Procedure)| 
