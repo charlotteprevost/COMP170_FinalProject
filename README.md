@@ -1,12 +1,19 @@
 COMP 170-005 – Spring 2024 – Final Project
 
+<p align="center">
 
 # **The Training Gibbet**
 _Alena Eshaya_ & _Charlotte Prevost_
 
+</p>
+
 ---
 
+<p align="center">
+
 # I. Project Proposal
+
+</p>
 
 ## Definition
 Our Training Gibbet is designed to hone a user’s Hangman word guessing skills. The user starts by selecting their difficulty (easy, medium, hard), then a word is randomly chosen by our code. One letter at a time, the user enters their guess.
