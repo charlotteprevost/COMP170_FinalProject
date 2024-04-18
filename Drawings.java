@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Drawings {
 
-    // Alena TO-DO: Use printf() to stylize with color
     public List<String> drawings = Arrays.asList(
             """
+                    
                     0 guesses left! Dead!
                        ____________
                        |           |
@@ -17,9 +17,11 @@ public class Drawings {
                        |         -----
                        |         || ||
                        |         || ||
-                    ___|___      -- --
+                       |         -- --
+                    ___|___
                     """,
             """
+                    
                     1 guess left!
                        ____________
                        |           |
@@ -30,9 +32,11 @@ public class Drawings {
                        |         -----
                        |         ||
                        |         ||
-                    ___|___      --
+                       |         --
+                    ___|___
                     """,
             """
+                    
                     2 guesses left!
                        ____________
                        |           |
@@ -43,9 +47,11 @@ public class Drawings {
                        |
                        |
                        |
+                       |
                     ___|___
                     """,
             """
+                    
                     3 guesses left!
                        ____________
                        |           |
@@ -56,9 +62,11 @@ public class Drawings {
                        |
                        |
                        |
+                       |
                     ___|___
                     """,
             """
+                    
                     4 guesses left!
                        ____________
                        |           |
@@ -69,9 +77,11 @@ public class Drawings {
                        |
                        |
                        |
+                       |
                     ___|___
                     """,
             """
+                    
                     5 guesses left!
                        ____________
                        |           |
@@ -82,12 +92,15 @@ public class Drawings {
                        |
                        |
                        |
+                       |
                     ___|___
                     """,
             """
+                    
                     6 guesses left!
                        ____________
                        |           |
+                       |
                        |
                        |
                        |
@@ -99,9 +112,32 @@ public class Drawings {
                     """
     );
 
+    // TODO: Alena
+    public String youWin =
+            """
+                    
+                    
+                    \t#########################################
+                    \t##              You Win!               ##
+                    \t#########################################
+                    . . . Play again?
+                    """;
+
+    // TODO: Alena
+    public String youLose =
+            """
+                    
+                    
+                    \t#########################################
+                    \t##              You Lose!              ##
+                    \t#########################################
+                    . . . Try again?
+                    """;
+
     public String getDrawings(int guessesLeft) {
         return drawings.get(guessesLeft);
     }
+    public String getEnd(int guessesLeft) { return guessesLeft == 0 ? youLose : youWin; }
 }
 
 
