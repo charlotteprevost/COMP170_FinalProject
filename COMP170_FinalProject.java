@@ -119,167 +119,199 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.*;
 
+//import javafx.*;
+
 public class COMP170_FinalProject {
 
+//    private static final String[] filePaths = {"./EasyWords.txt", "./MediumWords.txt", "./HardWords.txt"};
+    private static final List<String> filePaths = new ArrayList<>();
     private static final List<String> wordsList = new ArrayList<>();
     private static int guessesLeft = 6;
     private static int lettersLeftToGuess;
-    private static String wordToGuess;
-    private static char[] letterGuesses;
-    private static String userGuess;
+    private static List<Character> wordToGuess = new ArrayList<>();
+    private static List<Character> letterGuesses = new ArrayList<>();
+    private static List<Character> userGuess = new ArrayList<>();
 
-
+    /** Welcome message and Instructions **/
     public static void welcomeUser() {
-        System.out.println("Welcome Message: ...\nHow to Play: ...");
+        System.out.print("""
+                
+                \t#########################################
+                \t##          Hello and Welcome!         ##
+                \t#########################################
+                
+                This mini-game is designed to hone your Hangman skills.
+                
+                Instructions:
+                 - Select word file (word will be randomly chosen from selected file)
+                 - Letters of the word you need to guess are denoted as space-separated underscores
+                 - Enter your letter guesses as prompted
+                 - If your 6 tries expire before you guess the whole word, you lose!
+                 
+                """);
     }
 
-    public static int setDifficulty() {
+    /**
+     * Count the number of Words.txt files in the current directory:
+     * This is to make the code scalable if the user wishes to add their own word files
+     */
+    public static void setUpWordFiles() {
+            File currentDir = new File("."); // Current directory
+            File[] files = currentDir.listFiles();  // List all files in the current directory
+            if (files != null) {
+                for (int i = 0; i < files.length; i++){
+                    if (files[i].isFile() && files[i].getName().toLowerCase().endsWith("words.txt")) {
+                        filePaths.add(files[i].getName());
+                    }
+                }
+            }
+        System.out.println(filePaths);
+    }
+
+    public static void printFileSelection(){
+        System.out.println("Please select your word file: ");
+        for (int i = 0; i < filePaths.size(); i++){
+            System.out.println("\tEnter "+i+" to select \""+ filePaths.get(i) +"\"");
+        }
+        System.out.print("\n==> ");
+    }
+
+    /** Select words file
+     *  - Set up the filePaths ArrayList of Strings containing the paths to the files in current directory
+     *  - Display file options and how to select a file
+     *  - Forever loop until user inputs a valid file option
+     */
+    public static int chooseFile() {
+        setUpWordFiles();
+        printFileSelection();
+
+//        int fileNum = -1; // Initialize value outside acceptable range
+
         Scanner console = new Scanner(System.in);
 
-        System.out.print(
-                "1 -> Easy\n" +
-                "2 -> Medium\n" +
-                "3 -> Hard\n" +
-                "Please select your difficulty (1, 2, or 3): "
-        );
-
-        int difficulty = 0; // Initialize value outside acceptable range
-
-        while (!(difficulty >= 1 && difficulty <= 3)) {
-            if (console.hasNextInt()) {
-                difficulty = console.nextInt();
-                if (!(difficulty >= 1 && difficulty <= 3)) {
-                    System.out.print("Invalid input. Please enter a digit (1, 2, or 3): ");
+        while (true) {
+            String input = console.nextLine().trim();
+            if (input.matches("^\\d+$")) { // Check if input is a positive integer
+                int fileNum = Integer.parseInt(input);
+                if (fileNum >= 0 && fileNum < filePaths.size()) {
+                    System.out.println("\nFile selected:\t\""+ filePaths.get(fileNum) +"\"");
+                    return fileNum; // Valid file index input, exit loop
                 }
-            } else {
-                System.out.print("Invalid input. Please enter a digit (1, 2, or 3): ");
-                console.next(); // Clear invalid input from scanner
             }
+            System.out.print("Invalid input.\nPlease enter a valid file number as listed above: ");
         }
 
-        return difficulty;
+//        while (true) {
+//            if (console.hasNext("\\d+")) { // "\\d+" matches one or more digits
+//                fileNum = Integer.parseInt(console.next());
+//                if (fileNum >= 0 && fileNum < filePaths.size()) {
+//                    break; // Valid file index input, exit loop
+//                } else {
+//                    System.out.print("Invalid input. ");
+//                }
+//            } else {
+//                System.out.print("Invalid input. ");
+//                console.next(); // Consume invalid input
+//            }
+//            System.out.print("Please enter a valid file number as listed above: ");
+//        }
+
+
+
+//        while (true) { // Forever loop until valid input is entered
+//            if (console.hasNextInt()) {
+//                fileNum = console.nextInt();
+//                if (fileNum >= 0 && fileNum < filePaths.size()) {
+//                    break; // Valid file index input, exit loop
+//                } else {
+//                    System.out.print("Invalid file number. ");
+//                }
+//            } else {
+//                System.out.print("Invalid input. ");
+//                console.next();
+//            }
+//            printFileSelection();
+//        }
+
+//        System.out.println("File selected: \""+ filePaths.get(fileNum) +"\"");
+//        return fileNum;
     }
 
-    public static void importWordsList(int difficulty)
+    /**
+     * Import words from a text file and store then into an ArrayList of Strings:
+     * IMPORTANT:
+     *  - Text files MUST contain one word per line.
+     *  - Text files MUST be located in current directory.
+     *  - Additional text files may be added below by modifying the switch statement below
+     *      as well as the filePaths array.
+     * @param fileNum - The index place of the selected file in the filePaths ArrayList
+     * @throws FileNotFoundException - For good practice
+     */
+    public static void importWordsList(int fileNum)
             throws FileNotFoundException {
-
-        Scanner input;
-        // Fetch word list according to difficulty
-        switch (difficulty) {
-            case 1:
-                System.out.println("Difficulty selected: Easy");
-                input = new Scanner(new File("./EasyWords.txt"));
-                break;
-            case 2:
-                System.out.println("Difficulty selected: Medium");
-                input = new Scanner(new File("./MediumWords.txt"));
-                break;
-            case 3:
-                System.out.println("Difficulty selected: Hard");
-                input = new Scanner(new File("./HardWords.txt"));
-                break;
-            default:
-                System.out.println("Error. Default difficulty set to Easy");
-                input = new Scanner(new File("./EasyWords.txt"));
-                break;
-        }
+        Scanner input = new Scanner(new File("./"+filePaths.get(fileNum)));
         while (input.hasNextLine()) {
             wordsList.add(input.nextLine());
         }
     }
 
-    // Count the number of unique characters in the String word
-    public static int cntDistinct(String str) {
-        // Set to store unique characters in the String
-        HashSet<Character> s = new HashSet<Character>();
-        for(int i = 0; i < str.length(); i++) {
-            s.add(str.charAt(i));
-        }
-        return s.size();
-    }
-
-    // Fetch a random word from a set difficulty level.
-    // Store the word and show the user how many letter places they must guess
-    // Instantiate Character array of previously
+    /** Prompt for difficulty and fetch a random word from the appropriate word list.
+     *      - Set difficulty
+     *      - Fetch word list based on difficulty
+     *      - Store random word from list
+     *      - Show user how many letter places they must guess
+     */
     public static void setWord()
             throws FileNotFoundException {
-        int difficulty = setDifficulty();
-        importWordsList(difficulty);
 
-        // Generate a random index to get a word from imported words list
+        int file = chooseFile();   // Ask user to select text file of words
+        importWordsList(file);  // Import word list corresponding to selected file
+
         Random rand = new Random();
-        int index = rand.nextInt(wordsList.size());
-        wordToGuess = wordsList.get(index).toUpperCase();
+        int index = rand.nextInt(wordsList.size());         // Generate a random index within the file's line range
+        String word = wordsList.get(index).toUpperCase();   // Get a word from imported words list
 
-        // Assign initial placeholder characters to user's wordGuess
-        userGuess = "_".repeat(wordToGuess.length());
-        System.out.println("Debug_Word to guess: "+ wordToGuess);
-        // Instantiate char array that will hold previous letter guesses
-        letterGuesses = "_".repeat(cntDistinct(wordToGuess)+guessesLeft).toCharArray();
-        printLeftToGuess();
-    }
-
-    // Print letters left to guess
-    // No return, no params
-    public static void printLeftToGuess() {
-        // CharacterIterator variable to iterate over the current characters of userGuess
-        CharacterIterator itr = new StringCharacterIterator(userGuess);
-        // while-loop to count remaining letters to guess
-        while (itr.current() != CharacterIterator.DONE) {
-
-            if (!Character.isLetter(itr.current())){
-                lettersLeftToGuess++;
-            }
-            // Getting the next input from the user
-            // using the next() method
-            itr.next();
+        for (int i = 0; i < word.length(); i++) {
+            wordToGuess.add(word.charAt(i));    // Store word's Characters in an ArrayList
+            userGuess.add('_');                 // Placeholder underscores for hidden letters
         }
 
-        String[] leftToGuess = userGuess.split("");
-        System.out.println("Word to guess: \t"+String.join(" ", leftToGuess));
+        System.out.println("Debug_wordToGuess: "+ wordToGuess);
+        printArrayList(userGuess, " ");
     }
 
-    // Add letter guess to letterGuesses
-    public static void updateLetterGuesses(char guess) {
-        for (int i = 0; i < letterGuesses.length; i++) {
-            if (letterGuesses[i] == '_'){
-                letterGuesses[i] = guess;
-                break;
-            }
+    /**
+     * Print the contents of a List<Character> array separated by a comma
+     * @param array - an ArrayList of Characters
+     */
+    public static void printArrayList(List<Character> array, String separator) {
+        System.out.print(array.getFirst());
+        for (int i = 1; i < array.size(); i++) {
+                System.out.print(separator + array.get(i));
         }
     }
 
-    // Print letters already guessed
-    // Optional: Add color to output (good guess green, bad guess red)
-    public static void printLetterGuesses() {
-        System.out.print("Previous guesses:\t");
-        if (letterGuesses[0] != '_'){
-            System.out.print(letterGuesses[0]);
-        }
-        for (int i = 1; i < letterGuesses.length; i++) {
-            if (letterGuesses[i] != '_'){
-                System.out.print(", "+letterGuesses[i]);
-            } else {
-                break;
-            }
-        }
-    }
-
-    // Print an illustration that represents how many guesses the user has left
-    // If 0 guesses left, drawings.getDrawings(0)cis called and displays a dead man
-    // Note: Drawings.java contains all hangman drawings.
+    /**
+     * Print hangman illustration
+     * A different image is displayed based on the number of guesses the user has left.
+     * If 0 guesses are left, drawings.getDrawings(0) is called and a full hangman is displayed.
+     * NOTE: All illustrations are in the Drawings.java file
+     */
     public static void printDrawing() {
         Drawings drawings = new Drawings();
         System.out.println(drawings.getDrawings(guessesLeft));
     }
 
+    public static void printEnd() {
+        Drawings drawings = new Drawings();
+        System.out.println(drawings.getEnd(guessesLeft));
+    }
+
     public static void checkGuess(char letter) {
         boolean wordContainsLetter = false;
-        for (int i = 0; i < wordToGuess.length(); i++) {
-            if (wordToGuess.charAt(i) == letter) {
-                StringBuilder updatedGuess = new StringBuilder(userGuess);
-                updatedGuess.setCharAt(i, letter);
-                userGuess = updatedGuess.toString();
+        for (int i = 0; i < wordToGuess.size(); i++) {
+            if (wordToGuess.get(i) == letter) {
+                userGuess.set(i, letter);
                 wordContainsLetter = true;
             }
         }
@@ -288,22 +320,31 @@ public class COMP170_FinalProject {
         }
     }
 
-    // Prompt user for letter guess
+    /**
+     * Prompt user for letter guess
+     * - Loops until user enters valid input
+     * - Stores the user's letter guess
+     * - Checks the letter guess by calling checkGuess(letter)
+     * - Prints an illustration based on guesses left
+     * - Prints the letters left to guess
+     * - Prints the letters previously guessed (right or wrong)
+     */
     public static void guessWord() {
         Scanner console = new Scanner(System.in);
         System.out.print("\nYour letter guess: ");
-        // Use RegEx matching to ensure we're getting a letter from the user
+        // Use RegEx matching to ensure we're getting one letter from the user
         while(!console.hasNext("[A-Za-z]")){
-            System.out.println("Invalid input, please enter a single letter: ");
+            System.out.print("Invalid input, please enter a single letter: ");
             console.next();
         }
         char letterGuess = console.next().toUpperCase().charAt(0);
-
-        updateLetterGuesses(letterGuess);
+        letterGuesses.add(letterGuess); // Update list of previous guesses (whether right or wrong)
         checkGuess(letterGuess);
         printDrawing();
-        printLeftToGuess();
-        printLetterGuesses();
+        System.out.print("Word to guess:\t");
+        printArrayList(userGuess, " ");
+        System.out.print("\nPrevious letter guesses:\t");
+        printArrayList(letterGuesses, ", ");
     }
 
     public static void main(String[] args)
@@ -312,8 +353,9 @@ public class COMP170_FinalProject {
         setWord();
         // While the user's guess so far is not equal to the word to
         // guess, and while the user still has chances, keep playing
-        while (!wordToGuess.contentEquals(userGuess) && guessesLeft != 0){
+        while (!wordToGuess.equals(userGuess) && guessesLeft != 0){
             guessWord();
         }
+        printEnd();
     }
 }
