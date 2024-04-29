@@ -36,21 +36,20 @@ public class COMP170_FinalProject {
 
     /** Welcome message and Instructions **/
     public static void welcomeUser() {
-        System.out.print("""
-                
-                \t#########################################
-                \t##          Hello and Welcome!         ##
-                \t#########################################
-                
-                This mini-game is designed to hone your Hangman skills.
-                
-                Instructions:
-                 - Select word file (word will be randomly chosen from selected file)
-                 - Letters of the word you need to guess are denoted as space-separated underscores
-                 - Enter your letter guesses as prompted
-                 - If your 6 tries expire before you guess the whole word, you lose!
-                 
-                """);
+        System.out.print(
+                "\n"+
+                "\t#########################################\n"+
+                "\t##          Hello and Welcome!         ##\n"+
+                "\t#########################################\n"+
+                "\n"+
+                "This mini-game is designed to hone your Hangman skills.\n"+
+                "\n"+
+                "Instructions:\n"+
+                " - Select word file (word will be randomly chosen from selected file)\n"+
+                " - Letters of the word you need to guess are denoted as space-separated underscores\n"+
+                " - Enter your letter guesses as prompted\n"+
+                " - If your 6 tries expire before you guess the whole word, you lose!\n"
+                 );
     }
 
     /**
@@ -138,11 +137,11 @@ public class COMP170_FinalProject {
             userGuess.add('_');                 // Placeholder underscores for hidden letters
         }
 
-        System.out.printf("""
-                [==========================================================]
-                [   Word to guess:\t%1$s                                   ]
-                [==========================================================]
-                """, userGuess);
+        System.out.printf(
+                "[==========================================================]\n"+
+                "[   Word to guess:\t%1$s                                   ]\n"+
+                "[==========================================================]\n"
+                , userGuess);
     }
 
     /**
